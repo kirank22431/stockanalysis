@@ -834,9 +834,12 @@ export function buildCryptoReport(input: {
     },
     technicals: {
       sma50: indicators.sma50,
-      sma200: closePrices.length >= 200
-        ? closePrices.slice(-200).reduce((a, b) => a + b, 0) / 200
-        : undefined,
+      sma200: (() => {
+        const closePrices = prices.map(p => p.close);
+        return closePrices.length >= 200
+          ? closePrices.slice(-200).reduce((a, b) => a + b, 0) / 200
+          : undefined;
+      })(),
       rsi: indicators.rsi,
       macd: indicators.macd,
       freshAt: now,
