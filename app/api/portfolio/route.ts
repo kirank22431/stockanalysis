@@ -181,13 +181,14 @@ async function quickAnalyzeStock(
     const report = buildStockReport({
       symbol,
       prices: priceResult.data,
-      profile: profileResult.data || undefined,
-      keyMetrics: keyMetricsResult.data?.[0] || undefined,
+      companyProfile: profileResult.data || undefined,
+      keyMetrics: keyMetricsResult.data || undefined,
       incomeStatements: undefined,
       balanceSheets: undefined,
-      cashFlowStatements: undefined,
+      cashFlows: undefined,
       earnings: undefined,
       filings: undefined,
+      keyFacts: undefined,
       sources: {},
     });
 
