@@ -134,7 +134,7 @@ export default function FilingsPage() {
                     <div>
                       <h3 className="font-semibold text-gray-900 dark:text-white mb-2">Key Points</h3>
                       <ul className="space-y-1">
-                        {filings.analysis.investmentBriefing.keyPoints.map((point, idx) => (
+                        {filings.analysis.investmentBriefing.keyPoints.map((point: string, idx: number) => (
                           <li key={idx} className="text-sm text-gray-700 dark:text-gray-300 flex items-start gap-2">
                             <span className="text-blue-500 mt-1">•</span>
                             <span>{point}</span>
