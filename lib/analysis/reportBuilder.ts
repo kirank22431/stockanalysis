@@ -162,6 +162,7 @@ export interface Report {
   why: string[];
   sections: ReportSection;
   sources: Record<string, string[]>;
+  prices: PricePoint[]; // Price history for charting
 }
 
 // Scoring functions
