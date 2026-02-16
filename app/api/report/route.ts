@@ -96,7 +96,12 @@ export async function GET(request: NextRequest) {
 
           const factsResult = await getCompanyFacts(companyProfile.data.cik);
           if (factsResult.data) {
-            keyFacts = extractKeyFacts(factsResult.data);
+            const extracted = extractKeyFacts(factsResult.data);
+            keyFacts = {
+              revenue: extracted.revenue ?? undefined,
+              netIncome: extracted.netIncome ?? undefined,
+              sharesOutstanding: extracted.sharesOutstanding ?? undefined,
+            };
             sources['SEC EDGAR'].push('companyfacts');
           }
         }
@@ -111,7 +116,12 @@ export async function GET(request: NextRequest) {
 
             const factsResult = await getCompanyFacts(cikResult.cik);
             if (factsResult.data) {
-              keyFacts = extractKeyFacts(factsResult.data);
+              const extracted = extractKeyFacts(factsResult.data);
+              keyFacts = {
+                revenue: extracted.revenue ?? undefined,
+                netIncome: extracted.netIncome ?? undefined,
+                sharesOutstanding: extracted.sharesOutstanding ?? undefined,
+              };
               sources['SEC EDGAR'].push('companyfacts');
             }
           }
