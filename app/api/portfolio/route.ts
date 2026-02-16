@@ -488,8 +488,8 @@ export async function GET(request: NextRequest) {
       generatedAt: new Date().toISOString(),
     };
 
-    // Cache for 1 hour
-    setCache(cacheKey, result, 3600000);
+    // Cache for default TTL (15 minutes)
+    setCache(cacheKey, result);
 
     return NextResponse.json(result);
   } catch (error) {
