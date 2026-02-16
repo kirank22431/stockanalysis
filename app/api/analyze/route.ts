@@ -30,7 +30,7 @@ export async function GET(request: NextRequest) {
     const [quoteRes, newsRes, secRes, earningsRes, financialsRes, analystRes] = await Promise.all([
       fetch(`${request.nextUrl.origin}/api/quote?symbol=${normalizedSymbol}`),
       fetch(`${request.nextUrl.origin}/api/news?symbol=${normalizedSymbol}`),
-      cik ? fetch(`${request.nextUrl.origin}/api/sec-filings?symbol=${normalizedSymbol}&cik=${cik}`) : Promise.resolve({ ok: false }),
+      cik ? fetch(`${request.nextUrl.origin}/api/sec-filings?symbol=${normalizedSymbol}&cik=${cik}`) : Promise.resolve(new Response(null, { status: 404 })),
       fetch(`${request.nextUrl.origin}/api/earnings?symbol=${normalizedSymbol}`),
       fetch(`${request.nextUrl.origin}/api/financials?symbol=${normalizedSymbol}&statement=income-statement`),
       fetch(`${request.nextUrl.origin}/api/analyst-reports?symbol=${normalizedSymbol}`),
