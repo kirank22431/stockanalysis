@@ -172,30 +172,6 @@ export interface SECFiling {
 }
 
 export interface SECFilingsResponse {
-  filings: {
-    recent: {
-      accessionNumber: string[];
-      filingDate: string[];
-      reportDate: string[];
-      acceptanceDateTime: string[];
-      act: string[];
-      form: string[];
-      fileNumber: string[];
-      filmNumber: string[];
-      items: string[];
-      size: number[];
-      isXBRL: number[];
-      isInlineXBRL: number[];
-      primaryDocument: string[];
-      primaryDocDescription: string[];
-    };
-    files: Array<{
-      name: string;
-      filingCount: number;
-      filingFrom: string;
-      filingTo: string;
-    }>;
-  };
   name: string;
   cik: string;
   ticker: string;

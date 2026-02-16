@@ -331,7 +331,7 @@ export function analyzeValuation(
   );
 
   // Relative valuation comparison
-  const relativeValuation = compareToIndustry(
+  const relativeValuationResult = compareToIndustry(
     {
       peRatio: metrics.peRatio,
       evToEbitda: metrics.evToEbitda,
@@ -346,6 +346,12 @@ export function analyzeValuation(
     },
     sector || ''
   );
+
+  // Map to expected interface format
+  const relativeValuation = {
+    status: relativeValuationResult.valuation,
+    details: relativeValuationResult.details,
+  };
 
   // Calculate confidence based on data availability
   let confidence = 50; // Base confidence
