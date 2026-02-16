@@ -218,7 +218,7 @@ async function quickAnalyzeStock(
       },
     };
 
-    setCache(cacheKey, analysis, 1800000); // Cache for 30 minutes
+    setCache(cacheKey, analysis); // Cache for default TTL (15 minutes)
     return analysis;
   } catch (error) {
     console.error(`Error analyzing ${symbol}:`, error);
