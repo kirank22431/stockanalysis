@@ -18,7 +18,6 @@ export async function GET(request: NextRequest) {
       return NextResponse.json(
         {
           error: sectorResult.error.error,
-          rateLimit: sectorResult.error.rateLimit,
         },
         { status: 500 }
       );
