@@ -93,7 +93,10 @@ export async function GET(request: NextRequest) {
     // Convert Yahoo Finance chart data to Alpha Vantage format
     // Chart returns: {date (Date object or timestamp), open, high, low, close, volume}
     for (const day of result) {
-      if (!day.date || day.open === undefined) continue; // Skip invalid data
+      if (!day.date || day.open === undefined || day.open === null) continue; // Skip invalid data
+      if (day.high === undefined || day.high === null) continue;
+      if (day.low === undefined || day.low === null) continue;
+      if (day.close === undefined || day.close === null) continue;
       
       // Handle date - could be Date object or timestamp
       let dateStr: string;
