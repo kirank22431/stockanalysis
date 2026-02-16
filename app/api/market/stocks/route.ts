@@ -42,13 +42,15 @@ async function analyzeStock(symbol: string): Promise<StockRecommendation | null>
     const report = buildStockReport({
       symbol,
       prices: priceResult.data,
-      profile: profileResult.data || undefined,
+      companyProfile: profileResult.data || undefined,
       keyMetrics: metricsResult.data || undefined,
       incomeStatements: undefined,
       balanceSheets: undefined,
-      cashFlowStatements: undefined,
+      cashFlows: undefined,
       earnings: undefined,
       filings: undefined,
+      keyFacts: undefined,
+      sources: {},
     });
 
     // Safety check: ensure report.summary exists
