@@ -180,7 +180,7 @@ export default function FilingsPage() {
                       <div className="p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
                         <h3 className="font-semibold text-blue-900 dark:text-blue-300 mb-2">Key Insights</h3>
                         <ul className="space-y-1 text-sm text-blue-800 dark:text-blue-200">
-                          {filings.analysis.keyInsights.slice(0, 3).map((insight, idx) => (
+                          {filings.analysis.keyInsights.slice(0, 3).map((insight: string, idx: number) => (
                             <li key={idx} className="flex items-start gap-2">
                               <span>•</span>
                               <span>{insight}</span>
@@ -194,7 +194,7 @@ export default function FilingsPage() {
                       <div className="p-4 bg-red-50 dark:bg-red-900/20 rounded-lg">
                         <h3 className="font-semibold text-red-900 dark:text-red-300 mb-2">Risk Factors</h3>
                         <ul className="space-y-1 text-sm text-red-800 dark:text-red-200">
-                          {filings.analysis.riskFactors.slice(0, 3).map((risk, idx) => (
+                          {filings.analysis.riskFactors.slice(0, 3).map((risk: string, idx: number) => (
                             <li key={idx} className="flex items-start gap-2">
                               <span>⚠️</span>
                               <span>{risk}</span>
@@ -208,7 +208,7 @@ export default function FilingsPage() {
                       <div className="p-4 bg-green-50 dark:bg-green-900/20 rounded-lg">
                         <h3 className="font-semibold text-green-900 dark:text-green-300 mb-2">Opportunities</h3>
                         <ul className="space-y-1 text-sm text-green-800 dark:text-green-200">
-                          {filings.analysis.opportunities.slice(0, 3).map((opp, idx) => (
+                          {filings.analysis.opportunities.slice(0, 3).map((opp: string, idx: number) => (
                             <li key={idx} className="flex items-start gap-2">
                               <span>✓</span>
                               <span>{opp}</span>
@@ -224,7 +224,7 @@ export default function FilingsPage() {
                     <div className="mt-4 p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
                       <h3 className="font-semibold text-gray-900 dark:text-white mb-2">Financial Overview</h3>
                       <ul className="space-y-1 text-sm text-gray-700 dark:text-gray-300">
-                        {filings.analysis.financialTrends.notes.map((note, idx) => (
+                        {filings.analysis.financialTrends.notes.map((note: string, idx: number) => (
                           <li key={idx}>• {note}</li>
                         ))}
                       </ul>
