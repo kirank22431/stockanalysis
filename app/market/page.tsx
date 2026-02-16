@@ -130,18 +130,18 @@ export default function MarketOverviewPage() {
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
-      <div className="container mx-auto px-4 py-8">
+      <div className="container mx-auto px-3 sm:px-4 md:px-6 py-4 sm:py-6 md:py-8">
         <div className="max-w-6xl mx-auto">
-          <Link href="/" className="text-blue-600 dark:text-blue-400 hover:underline mb-4 inline-block">
+          <Link href="/" className="text-blue-600 dark:text-blue-400 hover:underline mb-3 sm:mb-4 inline-block text-sm sm:text-base">
             ← Back to Home
           </Link>
 
-          <div className="flex items-center justify-between mb-6">
-            <h1 className="text-4xl font-bold text-gray-900 dark:text-white">Market Overview</h1>
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4 mb-4 sm:mb-6">
+            <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 dark:text-white">Market Overview</h1>
             {overview && overview.industryBenchmarks && (
               <button
                 onClick={() => setShowBenchmarks(!showBenchmarks)}
-                className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors"
+                className="w-full sm:w-auto px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors text-sm sm:text-base active:scale-95"
               >
                 {showBenchmarks ? 'Hide' : 'Show'} Industry Benchmarks
               </button>
@@ -149,8 +149,8 @@ export default function MarketOverviewPage() {
           </div>
 
           {overview?.dataSource && (
-            <div className="bg-blue-50 dark:bg-blue-900/20 border-l-4 border-blue-400 p-4 rounded mb-6">
-              <p className="text-sm text-blue-800 dark:text-blue-200">
+            <div className="bg-blue-50 dark:bg-blue-900/20 border-l-4 border-blue-400 p-3 sm:p-4 rounded mb-4 sm:mb-6">
+              <p className="text-xs sm:text-sm text-blue-800 dark:text-blue-200 break-words">
                 <strong>Data Source:</strong>{' '}
                 <a
                   href={overview.dataSource.url}
@@ -168,11 +168,11 @@ export default function MarketOverviewPage() {
 
           {/* Industry Benchmarks Table */}
           {showBenchmarks && overview?.industryBenchmarks && (
-            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 mb-6">
-              <h2 className="text-2xl font-semibold text-gray-900 dark:text-white mb-4">
+            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-3 sm:p-4 md:p-6 mb-4 sm:mb-6">
+              <h2 className="text-lg sm:text-xl md:text-2xl font-semibold text-gray-900 dark:text-white mb-3 sm:mb-4">
                 Industry Valuation Benchmarks (Damodaran Methodology)
               </h2>
-              <div className="overflow-x-auto">
+              <div className="overflow-x-auto -mx-3 sm:mx-0">
                 <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
                   <thead className="bg-gray-50 dark:bg-gray-700">
                     <tr>

@@ -137,54 +137,56 @@ ${report.why.map((r) => `• ${r}`).join('\n')}
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-slate-50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900">
-      <div className="container mx-auto px-4 py-8">
+      <div className="container mx-auto px-3 sm:px-4 md:px-6 py-4 sm:py-6 md:py-8">
         <div className="max-w-6xl mx-auto">
           {/* Header */}
-          <div className="mb-8">
+          <div className="mb-6 sm:mb-8">
             <Link 
               href="/" 
-              className="inline-flex items-center gap-2 text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 mb-6 transition-colors font-medium"
+              className="inline-flex items-center gap-2 text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 mb-4 sm:mb-6 transition-colors font-medium text-sm sm:text-base"
             >
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
               </svg>
               Back to Home
             </Link>
-            <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-lg rounded-2xl shadow-xl p-6 border border-gray-200/50 dark:border-gray-700/50">
-              <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-                <div>
-                  <div className="flex items-center gap-3 mb-2">
-                    <h1 className="text-4xl md:text-5xl font-extrabold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+            <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-lg rounded-xl sm:rounded-2xl shadow-xl p-4 sm:p-6 border border-gray-200/50 dark:border-gray-700/50">
+              <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3 sm:gap-4">
+                <div className="flex-1 min-w-0">
+                  <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 mb-2">
+                    <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-extrabold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent break-words">
                       {report.symbol}
                     </h1>
                     {sections.company && (
-                      <span className="text-xl font-medium text-gray-600 dark:text-gray-400">
+                      <span className="text-base sm:text-lg md:text-xl font-medium text-gray-600 dark:text-gray-400 truncate">
                         {sections.company.name}
                       </span>
                     )}
                   </div>
-                  <p className="text-sm text-gray-500 dark:text-gray-400">
+                  <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400 break-words">
                     {report.assetType === 'stock' ? '📊 Stock' : '₿ Cryptocurrency'} Analysis Report • Generated {new Date(report.generatedAt).toLocaleString()}
                   </p>
                 </div>
-                <div className="flex gap-3">
+                <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 w-full sm:w-auto">
                   <button
                     onClick={downloadJSON}
-                    className="px-5 py-2.5 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-200 rounded-xl text-sm font-semibold transition-all flex items-center gap-2"
+                    className="w-full sm:w-auto px-4 sm:px-5 py-2 sm:py-2.5 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-200 rounded-lg sm:rounded-xl text-xs sm:text-sm font-semibold transition-all flex items-center justify-center gap-2 active:scale-95"
                   >
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg className="w-3 h-3 sm:w-4 sm:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                     </svg>
-                    Download JSON
+                    <span className="hidden sm:inline">Download JSON</span>
+                    <span className="sm:hidden">Download</span>
                   </button>
                   <button
                     onClick={copySummary}
-                    className="px-5 py-2.5 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white rounded-xl text-sm font-semibold transition-all flex items-center gap-2 shadow-lg"
+                    className="w-full sm:w-auto px-4 sm:px-5 py-2 sm:py-2.5 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white rounded-lg sm:rounded-xl text-xs sm:text-sm font-semibold transition-all flex items-center justify-center gap-2 shadow-lg active:scale-95"
                   >
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg className="w-3 h-3 sm:w-4 sm:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
                     </svg>
-                    Copy Summary
+                    <span className="hidden sm:inline">Copy Summary</span>
+                    <span className="sm:hidden">Copy</span>
                   </button>
                 </div>
               </div>
@@ -192,17 +194,17 @@ ${report.why.map((r) => `• ${r}`).join('\n')}
           </div>
 
           {/* Disclaimer */}
-          <div className="bg-yellow-50 dark:bg-yellow-900/20 border-l-4 border-yellow-400 p-4 mb-6 rounded">
-            <p className="text-sm text-yellow-800 dark:text-yellow-200 font-semibold">
+          <div className="bg-yellow-50 dark:bg-yellow-900/20 border-l-4 border-yellow-400 p-3 sm:p-4 mb-4 sm:mb-6 rounded">
+            <p className="text-xs sm:text-sm text-yellow-800 dark:text-yellow-200 font-semibold">
               ⚠️ Educational only. Not financial advice.
             </p>
           </div>
 
           {/* Summary Card */}
-          <div className="bg-gradient-to-br from-white to-blue-50/50 dark:from-gray-800 dark:to-gray-800/50 backdrop-blur-lg rounded-2xl shadow-2xl p-8 mb-8 border border-gray-200/50 dark:border-gray-700/50">
-            <div className="flex flex-col md:flex-row items-center gap-8 mb-6">
+          <div className="bg-gradient-to-br from-white to-blue-50/50 dark:from-gray-800 dark:to-gray-800/50 backdrop-blur-lg rounded-xl sm:rounded-2xl shadow-2xl p-4 sm:p-6 md:p-8 mb-6 sm:mb-8 border border-gray-200/50 dark:border-gray-700/50">
+            <div className="flex flex-col sm:flex-row items-center gap-4 sm:gap-6 md:gap-8 mb-4 sm:mb-6">
               <div
-                className={`px-8 py-6 rounded-2xl font-extrabold text-3xl shadow-lg transform transition-all ${
+                className={`px-4 sm:px-6 md:px-8 py-4 sm:py-5 md:py-6 rounded-xl sm:rounded-2xl font-extrabold text-xl sm:text-2xl md:text-3xl shadow-lg transform transition-all ${
                   summary.label === 'Bullish'
                     ? 'bg-gradient-to-br from-green-400 to-emerald-600 text-white'
                     : summary.label === 'Neutral'
@@ -212,10 +214,10 @@ ${report.why.map((r) => `• ${r}`).join('\n')}
               >
                 {summary.label}
               </div>
-              <div className="flex-1 grid grid-cols-2 gap-6">
-                <div className="text-center md:text-left">
-                  <p className="text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-2">Recommendation</p>
-                  <p className={`text-4xl font-extrabold ${
+              <div className="flex-1 w-full grid grid-cols-2 gap-4 sm:gap-6">
+                <div className="text-center sm:text-left">
+                  <p className="text-xs sm:text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-1 sm:mb-2">Recommendation</p>
+                  <p className={`text-2xl sm:text-3xl md:text-4xl font-extrabold ${
                     summary.recommendation === 'Buy' ? 'text-green-600 dark:text-green-400' :
                     summary.recommendation === 'Hold' ? 'text-yellow-600 dark:text-yellow-400' :
                     'text-red-600 dark:text-red-400'
@@ -223,11 +225,11 @@ ${report.why.map((r) => `• ${r}`).join('\n')}
                     {summary.recommendation}
                   </p>
                 </div>
-                <div className="text-center md:text-left">
-                  <p className="text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-2">Confidence</p>
-                  <div className="flex items-baseline gap-2">
-                    <p className="text-4xl font-extrabold text-gray-900 dark:text-white">{summary.confidence}%</p>
-                    <div className="w-24 h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
+                <div className="text-center sm:text-left">
+                  <p className="text-xs sm:text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-1 sm:mb-2">Confidence</p>
+                  <div className="flex flex-col sm:flex-row items-center sm:items-baseline gap-1 sm:gap-2">
+                    <p className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-gray-900 dark:text-white">{summary.confidence}%</p>
+                    <div className="w-full sm:w-24 h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
                       <div 
                         className={`h-full rounded-full ${
                           summary.confidence >= 70 ? 'bg-green-500' :
@@ -241,9 +243,9 @@ ${report.why.map((r) => `• ${r}`).join('\n')}
               </div>
             </div>
 
-            <div className="border-t border-gray-200 dark:border-gray-700 pt-4">
-              <p className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Key Reasons:</p>
-              <ul className="list-disc list-inside space-y-1 text-sm text-gray-600 dark:text-gray-400">
+            <div className="border-t border-gray-200 dark:border-gray-700 pt-3 sm:pt-4">
+              <p className="text-xs sm:text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Key Reasons:</p>
+              <ul className="list-disc list-inside space-y-1 text-xs sm:text-sm text-gray-600 dark:text-gray-400">
                 {why.map((reason, idx) => (
                   <li key={idx}>{reason}</li>
                 ))}
@@ -253,9 +255,9 @@ ${report.why.map((r) => `• ${r}`).join('\n')}
 
           {/* Sections */}
           {sections.company && (
-            <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6 mb-6">
-              <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">Company Profile</h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-4 sm:p-6 mb-4 sm:mb-6">
+              <h2 className="text-lg sm:text-xl font-semibold text-gray-900 dark:text-white mb-3 sm:mb-4">Company Profile</h2>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                 {sections.company.sector && (
                   <div>
                     <p className="text-sm text-gray-500 dark:text-gray-400">Sector</p>
@@ -296,9 +298,9 @@ ${report.why.map((r) => `• ${r}`).join('\n')}
           )}
 
           {sections.valuation && (
-            <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6 mb-6">
-              <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">Valuation</h2>
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-4 sm:p-6 mb-4 sm:mb-6">
+              <h2 className="text-lg sm:text-xl font-semibold text-gray-900 dark:text-white mb-3 sm:mb-4">Valuation</h2>
+              <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
                 {sections.valuation.peRatio !== undefined && (
                   <div>
                     <p className="text-sm text-gray-500 dark:text-gray-400">P/E Ratio</p>

@@ -99,25 +99,25 @@ export default function PortfolioPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50 to-indigo-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
-      <div className="container mx-auto px-4 py-8">
+      <div className="container mx-auto px-3 sm:px-4 md:px-6 py-4 sm:py-6 md:py-8">
         <div className="max-w-7xl mx-auto">
-          <Link href="/" className="text-blue-600 dark:text-blue-400 hover:underline mb-4 inline-block">
+          <Link href="/" className="text-blue-600 dark:text-blue-400 hover:underline mb-3 sm:mb-4 inline-block text-sm sm:text-base">
             ← Back to Home
           </Link>
 
-          <div className="text-center mb-8">
-            <h1 className="text-5xl font-bold text-gray-900 dark:text-white mb-4">
+          <div className="text-center mb-6 sm:mb-8">
+            <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 dark:text-white mb-3 sm:mb-4">
               Portfolio Diversification Planner
             </h1>
-            <p className="text-xl text-gray-600 dark:text-gray-400">
+            <p className="text-base sm:text-lg md:text-xl text-gray-600 dark:text-gray-400 px-2">
               Get personalized investment recommendations based on your investment amount
             </p>
           </div>
 
           {/* Investment Input Form */}
-          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-xl p-8 mb-8">
+          <div className="bg-white dark:bg-gray-800 rounded-lg sm:rounded-xl shadow-xl p-4 sm:p-6 md:p-8 mb-6 sm:mb-8">
             <form onSubmit={handleSubmit} className="max-w-2xl mx-auto">
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6 mb-4 sm:mb-6">
                 <div className="md:col-span-1">
                   <label htmlFor="amount" className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
                     Investment Amount (USD)
@@ -185,9 +185,14 @@ export default function PortfolioPage() {
               <button
                 type="submit"
                 disabled={loading || !investmentAmount}
-                className="w-full py-4 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 disabled:from-gray-400 disabled:to-gray-500 text-white font-bold text-lg rounded-lg transition-all transform hover:scale-105 disabled:transform-none"
+                className="w-full py-3 sm:py-4 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 disabled:from-gray-400 disabled:to-gray-500 text-white font-bold text-base sm:text-lg rounded-lg transition-all transform hover:scale-105 disabled:transform-none active:scale-95"
               >
-                {loading ? 'Generating Plan...' : 'Generate Diversification Plan'}
+                {loading ? 'Generating Plan...' : (
+                  <>
+                    <span className="hidden sm:inline">Generate Diversification Plan</span>
+                    <span className="sm:hidden">Generate Plan</span>
+                  </>
+                )}
               </button>
             </form>
 
