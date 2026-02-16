@@ -38,6 +38,8 @@ interface SectorStocks {
   sector: string;
   stocks: StockRecommendation[];
   totalAnalyzed: number;
+  successfullyAnalyzed?: number;
+  buyCount?: number;
   generatedAt: string;
 }
 
