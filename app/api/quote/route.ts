@@ -74,11 +74,16 @@ export async function GET(request: NextRequest) {
       'Meta Data': {
         '1. Information': 'Daily Prices (open, high, low, close) and Volumes',
         '2. Symbol': normalizedSymbol,
-        '3. Last Refreshed': result.length > 0 ? (
-          result[result.length - 1].date instanceof Date 
-            ? result[result.length - 1].date.toISOString().split('T')[0]
-            : new Date(result[result.length - 1].date * 1000).toISOString().split('T')[0]
-        ) : new Date().toISOString().split('T')[0],
+        '3. Last Refreshed': result.length > 0 ? (() => {
+          const lastDate = result[result.length - 1].date;
+          if (lastDate instanceof Date) {
+            return lastDate.toISOString().split('T')[0];
+          } else if (typeof lastDate === 'number') {
+            return new Date(lastDate * 1000).toISOString().split('T')[0];
+          } else {
+            return new Date().toISOString().split('T')[0];
+          }
+        })() : new Date().toISOString().split('T')[0],
         '4. Output Size': 'Full',
         '5. Time Zone': 'US/Eastern',
       },
