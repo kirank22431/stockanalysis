@@ -70,8 +70,8 @@ async function analyzeStock(symbol: string): Promise<StockRecommendation | null>
         : [], // Top 3 reasons from the "why" array
     };
 
-    // Cache for 1 hour
-    setCache(cacheKey, recommendation, 3600000);
+    // Cache for default TTL (15 minutes)
+    setCache(cacheKey, recommendation);
 
     return recommendation;
   } catch (error) {
