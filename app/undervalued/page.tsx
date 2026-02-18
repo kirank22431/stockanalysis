@@ -27,15 +27,38 @@ interface UndervaluedStock {
     details: Array<{ metric: string; stock: number | undefined; industry: number; difference: number }>;
   };
   methodology: string[];
+  intrinsicValues?: {
+    graham: number | null;
+    dcf: number | null;
+    relative: number | null;
+    average: number | null;
+  };
+}
+
+interface AnalysisResponse {
+  error?: string;
+  warning?: boolean;
+  details?: {
+    valuationStatus: string;
+    relativeValuationStatus: string;
+    upsidePotential: number;
+    peRatio?: number;
+    meetsPE: boolean;
+    meetsUpside: boolean;
+    meetsAbsolute: boolean;
+    meetsRelative: boolean;
+  };
+  analysis?: UndervaluedStock;
 }
 
 export default function UndervaluedStocksPage() {
   const [symbol, setSymbol] = useState('');
-  const [minUpside, setMinUpside] = useState('15');
-  const [maxPE, setMaxPE] = useState('30');
+  const [minUpside, setMinUpside] = useState('10'); // Lowered default from 15 to 10
+  const [maxPE, setMaxPE] = useState('50'); // Increased default from 30 to 50
   const [result, setResult] = useState<UndervaluedStock | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [warning, setWarning] = useState<AnalysisResponse['details'] | null>(null);
 
   const handleAnalyze = useCallback(async (e: React.FormEvent) => {
     e.preventDefault();
@@ -53,18 +76,35 @@ export default function UndervaluedStocksPage() {
       });
 
       const response = await fetch(`/api/undervalued?${params.toString()}`);
-      const data = await response.json();
+      const data: AnalysisResponse = await response.json();
 
-      if (!response.ok || data.error) {
+      if (!response.ok) {
         setError(data.error || 'Failed to analyze stock');
         setResult(null);
+        setWarning(null);
+      } else if (data.warning && data.analysis) {
+        // Show analysis even if it doesn't meet strict criteria
+        setResult(data.analysis);
+        setWarning(data.details || null);
+        setError(data.error || null);
+      } else if (data.warning && (data as any).result) {
+        // Alternative response format
+        setResult((data as any).result);
+        setWarning(data.details || null);
+        setError(data.error || null);
+      } else if (data.error && !data.analysis && !(data as any).result) {
+        setError(data.error);
+        setResult(null);
+        setWarning(null);
       } else {
-        setResult(data);
+        setResult(data as unknown as UndervaluedStock);
         setError(null);
+        setWarning(null);
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Unknown error');
       setResult(null);
+      setWarning(null);
     } finally {
       setLoading(false);
     }
@@ -177,8 +217,24 @@ export default function UndervaluedStocksPage() {
             </form>
           </div>
 
-          {/* Error Message */}
-          {error && (
+          {/* Warning Message */}
+          {warning && (
+            <div className="bg-yellow-50 dark:bg-yellow-900/20 border-l-4 border-yellow-400 p-4 mb-6 rounded">
+              <p className="text-yellow-800 dark:text-yellow-200 font-semibold mb-2">⚠️ Analysis Note</p>
+              <p className="text-sm text-yellow-700 dark:text-yellow-300 mb-3">{error}</p>
+              <div className="text-xs sm:text-sm text-yellow-700 dark:text-yellow-300 space-y-1">
+                <p><strong>Valuation Status:</strong> {warning.valuationStatus} (Absolute), {warning.relativeValuationStatus} (vs Industry)</p>
+                <p><strong>Upside Potential:</strong> {warning.upsidePotential >= 0 ? '+' : ''}{warning.upsidePotential.toFixed(1)}%</p>
+                {warning.peRatio !== undefined && (
+                  <p><strong>P/E Ratio:</strong> {warning.peRatio.toFixed(2)} {warning.meetsPE ? '✓' : '✗ (exceeds max)'}</p>
+                )}
+                <p><strong>Criteria Met:</strong> Upside: {warning.meetsUpside ? '✓' : '✗'}, Absolute: {warning.meetsAbsolute ? '✓' : '✗'}, Relative: {warning.meetsRelative ? '✓' : '✗'}</p>
+              </div>
+            </div>
+          )}
+
+          {/* Error Message (only if no analysis available) */}
+          {error && !result && (
             <div className="bg-red-50 dark:bg-red-900/20 border-l-4 border-red-400 p-4 mb-6 rounded">
               <p className="text-red-800 dark:text-red-200 font-semibold">Analysis Result</p>
               <p className="text-sm text-red-700 dark:text-red-300 mt-1">{error}</p>
@@ -189,7 +245,13 @@ export default function UndervaluedStocksPage() {
           {result && (
             <div className="space-y-6">
               {/* Summary Card */}
-              <div className="bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 rounded-xl shadow-xl p-4 sm:p-6 md:p-8 border-2 border-green-400 dark:border-green-600">
+              <div className={`rounded-xl shadow-xl p-4 sm:p-6 md:p-8 border-2 ${
+                result.valuationStatus === 'undervalued' || result.relativeValuation.status === 'undervalued'
+                  ? 'bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 border-green-400 dark:border-green-600'
+                  : result.valuationStatus === 'overvalued'
+                  ? 'bg-gradient-to-br from-red-50 to-rose-50 dark:from-red-900/20 dark:to-rose-900/20 border-red-400 dark:border-red-600'
+                  : 'bg-gradient-to-br from-yellow-50 to-orange-50 dark:from-yellow-900/20 dark:to-orange-900/20 border-yellow-400 dark:border-yellow-600'
+              }`}>
                 <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-4">
                   <div>
                     <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white mb-2">
@@ -201,15 +263,29 @@ export default function UndervaluedStocksPage() {
                       </p>
                     )}
                   </div>
-                  <div className={`px-4 sm:px-6 py-2 sm:py-3 rounded-lg font-bold text-lg sm:text-xl ${
-                    result.valuationStatus === 'undervalued'
-                      ? 'bg-green-500 text-white'
-                      : result.valuationStatus === 'overvalued'
-                      ? 'bg-red-500 text-white'
-                      : 'bg-yellow-500 text-white'
-                  }`}>
-                    {result.valuationStatus === 'undervalued' ? '✓ UNDERVALUED' :
-                     result.valuationStatus === 'overvalued' ? '✗ OVERVALUED' : '≈ FAIR VALUE'}
+                  <div className="flex flex-col sm:flex-row gap-2">
+                    <div className={`px-4 sm:px-6 py-2 sm:py-3 rounded-lg font-bold text-base sm:text-lg ${
+                      result.valuationStatus === 'undervalued'
+                        ? 'bg-green-500 text-white'
+                        : result.valuationStatus === 'overvalued'
+                        ? 'bg-red-500 text-white'
+                        : 'bg-yellow-500 text-white'
+                    }`}>
+                      {result.valuationStatus === 'undervalued' ? '✓ UNDERVALUED' :
+                       result.valuationStatus === 'overvalued' ? '✗ OVERVALUED' : '≈ FAIR VALUE'}
+                    </div>
+                    {result.relativeValuation.status !== result.valuationStatus && (
+                      <div className={`px-4 sm:px-6 py-2 sm:py-3 rounded-lg font-bold text-base sm:text-lg ${
+                        result.relativeValuation.status === 'undervalued'
+                          ? 'bg-blue-500 text-white'
+                          : result.relativeValuation.status === 'overvalued'
+                          ? 'bg-orange-500 text-white'
+                          : 'bg-gray-500 text-white'
+                      }`}>
+                        {result.relativeValuation.status === 'undervalued' ? '✓ vs Industry' :
+                         result.relativeValuation.status === 'overvalued' ? '✗ vs Industry' : '≈ vs Industry'}
+                      </div>
+                    )}
                   </div>
                 </div>
 
@@ -240,6 +316,53 @@ export default function UndervaluedStocksPage() {
                   </div>
                 </div>
               </div>
+
+              {/* Intrinsic Value Breakdown */}
+              {result.intrinsicValues && (
+                <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-4 sm:p-6 mb-6">
+                  <h3 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white mb-4">
+                    Intrinsic Value Calculations (Damodaran Methods)
+                  </h3>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+                    {result.intrinsicValues.graham !== null && (
+                      <div className="p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800">
+                        <p className="text-xs sm:text-sm font-semibold text-blue-900 dark:text-blue-300 mb-1">Graham Formula</p>
+                        <p className="text-lg sm:text-xl font-bold text-blue-600 dark:text-blue-400">
+                          ${result.intrinsicValues.graham.toFixed(2)}
+                        </p>
+                        <p className="text-xs text-blue-700 dark:text-blue-500 mt-1">EPS × Book Value</p>
+                      </div>
+                    )}
+                    {result.intrinsicValues.dcf !== null && (
+                      <div className="p-4 bg-purple-50 dark:bg-purple-900/20 rounded-lg border border-purple-200 dark:border-purple-800">
+                        <p className="text-xs sm:text-sm font-semibold text-purple-900 dark:text-purple-300 mb-1">DCF Analysis</p>
+                        <p className="text-lg sm:text-xl font-bold text-purple-600 dark:text-purple-400">
+                          ${result.intrinsicValues.dcf.toFixed(2)}
+                        </p>
+                        <p className="text-xs text-purple-700 dark:text-purple-500 mt-1">Discounted Cash Flow</p>
+                      </div>
+                    )}
+                    {result.intrinsicValues.relative !== null && (
+                      <div className="p-4 bg-green-50 dark:bg-green-900/20 rounded-lg border border-green-200 dark:border-green-800">
+                        <p className="text-xs sm:text-sm font-semibold text-green-900 dark:text-green-300 mb-1">Relative Valuation</p>
+                        <p className="text-lg sm:text-xl font-bold text-green-600 dark:text-green-400">
+                          ${result.intrinsicValues.relative.toFixed(2)}
+                        </p>
+                        <p className="text-xs text-green-700 dark:text-green-500 mt-1">vs Industry Peers</p>
+                      </div>
+                    )}
+                    {result.intrinsicValues.average !== null && (
+                      <div className="p-4 bg-indigo-50 dark:bg-indigo-900/20 rounded-lg border border-indigo-200 dark:border-indigo-800">
+                        <p className="text-xs sm:text-sm font-semibold text-indigo-900 dark:text-indigo-300 mb-1">Average Fair Value</p>
+                        <p className="text-lg sm:text-xl font-bold text-indigo-600 dark:text-indigo-400">
+                          ${result.intrinsicValues.average.toFixed(2)}
+                        </p>
+                        <p className="text-xs text-indigo-700 dark:text-indigo-500 mt-1">All Methods Average</p>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
 
               {/* Valuation Metrics */}
               <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-4 sm:p-6">

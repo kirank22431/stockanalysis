@@ -29,6 +29,12 @@ interface UndervaluedStock {
     details: Array<{ metric: string; stock: number | undefined; industry: number; difference: number }>;
   };
   methodology: string[];
+  intrinsicValues?: {
+    graham: number | null;
+    dcf: number | null;
+    relative: number | null;
+    average: number | null;
+  };
 }
 
 export async function GET(request: NextRequest) {
@@ -111,20 +117,91 @@ export async function GET(request: NextRequest) {
       }
     );
 
-    // Filter based on criteria
-    const isUndervalued = valuation.valuationStatus === 'undervalued' && 
-                          valuation.upsideDownside.fairValueUpside >= minUpside;
+    // More flexible criteria for undervalued stocks
+    // Consider stocks that are:
+    // 1. Marked as undervalued (>15% discount), OR
+    // 2. Have positive upside potential above threshold, OR
+    // 3. Are undervalued relative to industry (even if absolute valuation is fair)
+    const hasPositiveUpside = valuation.upsideDownside.fairValueUpside >= minUpside;
+    const isUndervaluedAbsolute = valuation.valuationStatus === 'undervalued';
+    const isUndervaluedRelative = valuation.relativeValuation.status === 'undervalued';
+    const isFairWithUpside = valuation.valuationStatus === 'fair' && hasPositiveUpside;
     const hasReasonablePE = !peRatio || peRatio <= maxPE;
 
-    if (!isUndervalued || !hasReasonablePE) {
+    // Consider stock undervalued if:
+    // - It's absolutely undervalued (>15% discount), OR
+    // - It's relatively undervalued vs industry, OR  
+    // - It's fair valued but has good upside potential
+    const isUndervalued = (isUndervaluedAbsolute || isUndervaluedRelative || isFairWithUpside) && hasReasonablePE;
+
+    // If it doesn't meet criteria, still return analysis but with a warning
+    if (!isUndervalued) {
       return NextResponse.json(
         { 
-          error: 'Stock does not meet undervalued criteria',
-          valuation: valuation.valuationStatus,
-          upside: valuation.upsideDownside.fairValueUpside,
-          peRatio,
+          error: 'Stock does not meet strict undervalued criteria',
+          warning: true,
+          details: {
+            valuationStatus: valuation.valuationStatus,
+            relativeValuationStatus: valuation.relativeValuation.status,
+            upsidePotential: valuation.upsideDownside.fairValueUpside,
+            peRatio,
+            meetsPE: hasReasonablePE,
+            meetsUpside: hasPositiveUpside,
+            meetsAbsolute: isUndervaluedAbsolute,
+            meetsRelative: isUndervaluedRelative,
+          },
+          // Still return the full analysis so user can see why
+          analysis: {
+            symbol: normalizedSymbol,
+            name: profile?.companyName || normalizedSymbol,
+            currentPrice,
+            fairValue: valuation.intrinsicValue.average,
+            upsidePotential: valuation.upsideDownside.fairValueUpside,
+            valuationStatus: valuation.valuationStatus,
+            confidence: valuation.confidence,
+            sector: profile?.sector,
+            industry: profile?.industry,
+            peRatio,
+            industryPE: profile?.sector ? 
+              getIndustryMetrics(profile.sector)?.peRatio : undefined,
+            metrics: {
+              peRatio,
+              priceToSales,
+              priceToBook,
+              evToEbitda,
+              profitMargin,
+            },
+            relativeValuation: valuation.relativeValuation,
+            methodology: valuation.methodology,
+            intrinsicValues: valuation.intrinsicValue,
+          },
+          // Return full result even if it doesn't meet strict criteria
+          result: {
+            symbol: normalizedSymbol,
+            name: profile?.companyName || normalizedSymbol,
+            currentPrice,
+            fairValue: valuation.intrinsicValue.average,
+            upsidePotential: valuation.upsideDownside.fairValueUpside,
+            valuationStatus: valuation.valuationStatus,
+            confidence: valuation.confidence,
+            sector: profile?.sector,
+            industry: profile?.industry,
+            peRatio,
+            industryPE: profile?.sector ? 
+              getIndustryMetrics(profile.sector)?.peRatio : undefined,
+            metrics: {
+              peRatio,
+              priceToSales,
+              priceToBook,
+              evToEbitda,
+              profitMargin,
+            },
+            relativeValuation: valuation.relativeValuation,
+            methodology: valuation.methodology,
+            intrinsicValues: valuation.intrinsicValue,
+          }
         },
-        { status: 200 } // Return 200 but with error message
+        { status: 200 }
       );
     }
 
@@ -150,6 +227,7 @@ export async function GET(request: NextRequest) {
       },
       relativeValuation: valuation.relativeValuation,
       methodology: valuation.methodology,
+      intrinsicValues: valuation.intrinsicValue,
     };
 
     // Cache for 1 hour
