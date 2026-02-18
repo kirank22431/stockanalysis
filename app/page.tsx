@@ -181,8 +181,8 @@ export default function Home() {
             <div className="space-y-4 sm:space-y-5">
               <div>
                 <p className="text-xs sm:text-sm font-semibold text-gray-300 mb-2 sm:mb-3 uppercase tracking-wide">Stocks</p>
-                <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-2 sm:gap-3">
-                  {['AAPL', 'MSFT', 'NVDA', 'TSLA'].map((sym) => (
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7 gap-2 sm:gap-3">
+                  {['AAPL', 'MSFT', 'NVDA', 'TSLA', 'GOOGL', 'AMZN', 'META'].map((sym) => (
                     <Link
                       key={sym}
                       href={`/report?symbol=${sym}&type=stock`}
