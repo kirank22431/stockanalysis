@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getStockPriceHistory } from '@/lib/providers/yahoo';
 import { getCompanyProfile, getKeyMetrics } from '@/lib/providers/fmp';
 import { analyzeValuation } from '@/lib/analysis/valuation';
+import { getIndustryMetrics } from '@/lib/providers/damodaran';
 import { getCache, setCache } from '@/lib/cache';
 
 interface UndervaluedStock {
@@ -139,7 +140,7 @@ export async function GET(request: NextRequest) {
       industry: profile?.industry,
       peRatio,
       industryPE: profile?.sector ? 
-        (await import('@/lib/providers/damodaran')).getIndustryMetrics(profile.sector)?.peRatio : undefined,
+        getIndustryMetrics(profile.sector)?.peRatio : undefined,
       metrics: {
         peRatio,
         priceToSales,
