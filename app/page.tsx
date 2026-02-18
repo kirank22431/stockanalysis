@@ -112,7 +112,22 @@ export default function Home() {
           </div>
 
           {/* Quick Actions */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-6 sm:mb-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 sm:gap-6 mb-6 sm:mb-8">
+            <Link
+              href="/undervalued"
+              className="group bg-white/10 backdrop-blur-lg rounded-lg sm:rounded-xl shadow-lg p-4 sm:p-6 hover:bg-white/15 transition-all border border-white/20 hover:border-purple-400/50 active:scale-95"
+            >
+              <div className="flex items-center gap-3 sm:gap-4">
+                <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-green-500 to-emerald-600 rounded-lg flex items-center justify-center text-xl sm:text-2xl flex-shrink-0">
+                  💎
+                </div>
+                <div className="min-w-0 flex-1">
+                  <h3 className="text-base sm:text-lg md:text-xl font-bold text-white mb-1 truncate">Undervalued Finder</h3>
+                  <p className="text-xs sm:text-sm text-gray-300 line-clamp-2">Damodaran valuation</p>
+                </div>
+              </div>
+            </Link>
+
             <Link
               href="/market"
               className="group bg-white/10 backdrop-blur-lg rounded-lg sm:rounded-xl shadow-lg p-4 sm:p-6 hover:bg-white/15 transition-all border border-white/20 hover:border-purple-400/50 active:scale-95"
